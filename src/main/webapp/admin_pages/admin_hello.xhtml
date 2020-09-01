@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:myTag="http://myTag.com/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Free Access Library</title>
+</h:head>
+<h:body>
+    <style type="text/css">
+        body {
+            background: url("/backGround.jpg") no-repeat;
+            background-size: 100%;
+        }
+        h2,h1{
+            text-shadow: 2px 2px 2px black,
+            0 2px 2px black,
+            -2px 0 2px black,
+            0 -2px 2px black;
+            color: cornsilk;
+        }
+        button{
+            border: snow 4px solid;
+            border-radius: 10px;
+        }
+    </style>
+
+    <div align="center">
+        <h4 style="color: mintcream">WELCOME,  <myTag:myOutputText myText="#{adminController.getCurrentUserName()}"/>
+            <button onclick="location.href='/user_pages/user_hello.xhtml'"><h2>User page</h2></button>
+            <button onclick="location.href='/manager_pages/manager_hello.xhtml'"><h2>Content-manager page</h2></button>
+            <button onclick="location.href='/logoutServlet'"><h2>Log out</h2></button>
+        </h4>
+
+        <h:form>
+            <p:dataTable id="userTable" scrollable="true"
+                         scrollHeight="250"
+                         scrollWidth="420"
+                         tableStyle="width:auto"
+                         value="#{adminController.users}"
+                         var="user"
+                         emptyMessage="No users found with this criteria">
+
+                <f:facet name="header" style="width: auto">
+                    <h4>Users</h4>
+                </f:facet>
+                <p:column headerText="Name" footerText="Name" style="width: auto">
+                    <h4><myTag:myOutputText myText="#{user.username}"/></h4>
+                </p:column>
+                <p:column headerText="Role" footerText="Role" style="width: auto">
+                    <h4><myTag:myOutputText myText="#{user.rolename}"/></h4>
+                </p:column>
+                <p:column headerText="Delete" footerText="Delete">
+                    <h:commandButton value="Delete"
+                                 action="#{adminController.deleteUser(user.username)}"
+                                 onclick="return confirm('Are you sure? User will be deleted.')"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </div>
+</h:body>
+
+</html>

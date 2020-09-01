@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:myTag="http://myTag.com/facelets">
+<h:head>
+    <title>Registration</title>
+</h:head>
+<h:body>
+    <style type="text/css">
+        body {
+            background: darkgrey no-repeat center center;
+            background-size: cover;
+        }
+        h4,h2,h1{
+            text-shadow: 2px 2px 2px black,
+            0 2px 2px black,
+            -2px 0 2px black,
+            0 -2px 2px black;
+            color: cornsilk;
+        }
+    </style>
+    <h2 align="center">Registration:</h2>
+    <h4 align="center">WELCOME, guest <button onclick="location.href='/user_pages/user_hello.xhtml'">Log in</button></h4>
+    <h:form>
+        <table style="margin: auto">
+            <tr><td><h1>User name :</h1></td><td><myTag:myInputText myText="#{adminController.username}"/></td></tr>
+            <tr><td><h1>Password :</h1></td><td><myTag:myInputText myText="#{adminController.password}"/></td></tr>
+            <tr><td><h1>Confirm password :</h1></td><td><myTag:myInputText myText="#{adminController.confirmPassword}"/></td></tr>
+            <tr><td><h:commandButton value = "Register" action = "#{adminController.addUser}"/></td></tr>
+        </table>
+    </h:form>
+</h:body>
+</html>

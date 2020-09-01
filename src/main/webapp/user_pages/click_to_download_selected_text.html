@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>London (level 2)</title>
+</head>
+<body>
+<script>
+
+    function that_click() {
+        var selected_text=window.getSelection().toString();
+        var textToWrite = selected_text.toString();
+        var textFileAsBlob = new Blob([textToWrite], { type: 'text/plain' });
+        var fileNameToSaveAs = "file.txt";
+        var downloadLink = document.createElement("a");
+        downloadLink.download = fileNameToSaveAs;
+        downloadLink.innerHTML = "Download File";
+        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+        downloadLink.onclick = (event) => document.body.removeChild(event.target);
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        window.URL.revokeObjectURL(textFileAsBlob);
+    }
+</script>
+<style type="text/css">
+    body {
+        background: darkgrey no-repeat center center;
+        background-size: cover;
+    }
+    h2{
+        color: black;
+    }
+</style>
+
+<button style="position: fixed;" onclick="that_click()"><h2>Click to save selected text</h2></button>
+
+<iframe id="fr" style="width: 700px; height: 400px; margin: auto;"
+        src="/user_pages/readBookServlet">
+</iframe>
+</body>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:myTag="http://myTag.com/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Free Access Library</title>
+</h:head>
+<h:body>
+    <style type="text/css">
+        body {
+            background: url("/backGround.jpg") no-repeat center center;
+            background-size: cover;
+        }
+        h2,h1{
+            text-shadow: 2px 2px 2px black,
+            0 2px 2px black,
+            -2px 0 2px black,
+            0 -2px 2px black;
+            color: cornsilk;
+        }
+        button{
+            border: snow 4px solid;
+            border-radius: 10px;
+        }
+        .msg-error{
+            background-color: #feefef;
+            border-color: #f48989;
+            color: #da1414;
+        }
+    </style>
+
+    <h2 style="color: mintcream" align="center">WELCOME,  <myTag:myOutputText myText="#{adminController.getCurrentUserName()}"/>
+        <button onclick="location.href='/manager_pages/manager_hello.xhtml'"><h2>Content-manager page</h2></button>
+        <button onclick="location.href='/admin_pages/admin_hello.xhtml'"><h2>Admin page</h2></button>
+        Balance : <myTag:myOutputText myText="#{userController.balance}"/> (y.e.)
+        <button onclick="location.href='/logoutServlet'"><h2>Log out</h2></button>
+    </h2>
+
+    <div align="center">
+        <h:form>
+            <h:panelGrid columns="3">
+                <h:outputText value="Input amount: " style="background-color: white"/>
+                <h:inputText id="amount"
+                             value="#{userController.y_e}"
+                             converterMessage="Input like this: xxxx.xx"
+                             validatorMessage="Please, try again, you amount shoud be > 0.0"
+                             requiredMessage="Please, try again, you amount shoud be (999999.0 > amount > 0.0)"
+                             required="true"
+                             maxlength="6">
+                    <f:validateLongRange minimum="1" maximum="999999" />
+                </h:inputText>
+                <h:message for="amount" class="msg-error"/>
+                <h:commandButton value="Refill" action="#{userController.refill}"/>
+            </h:panelGrid>
+        </h:form>
+    </div>
+
+    <div align="center">
+    <h:form>
+
+        <f:event type="preRenderView" listener="#{managerController.beforeLoadingPage}"/>
+
+        <h:panelGrid columns="3">
+            <h:outputText value="Input id of book :" style="background-color: white"/>
+            <h:inputText id="bookId"
+                         value="#{userController.bookId}"
+                         converterMessage="Only numeric characters"
+                         validatorMessage="Please, use id from 1 to 9999"
+                         requiredMessage="You should to enter id from 1 to 9999"
+                         required="true"
+                         maxlength="4">
+                <f:validateLongRange minimum="1" maximum="9999" />
+            </h:inputText>
+            <h:message for="bookId" class="msg-error"/>
+        </h:panelGrid>
+
+        <h:panelGrid columns="4">
+        <h:commandButton value="Download .PDF"
+                         action="#{userController.checkForDownloadWithValue(null,'attachment')}"
+                         onclick="return confirm('Are you sure? ')"/>
+        <h:commandButton value="Convert .PDF to .TXT and Download"
+                         action="#{userController.checkForDownloadWithValue('convertPDFtoTXT','attachment')}"
+                         onclick="return confirm('Are you sure? ')"/>
+        <h:commandButton value="Convert .PDF to .DOC and Download"
+                         action="#{userController.checkForDownloadWithValue('convertPDFtoDOC','attachment')}"
+                         onclick="return confirm('Are you sure? ')"/>
+        <h:commandButton value="Read Book Online"
+                         action="#{userController.checkForDownloadWithValue(null,'inline')}"
+                         onclick="return confirm('Are you sure? ')"/>
+        </h:panelGrid>
+
+        <p:dataTable id="dataTable" scrollable="true"
+                     scrollHeight="500"
+                     scrollWidth="1100"
+                     tableStyle="width:auto"
+                     value="#{managerController.sortedBooks}" var="book"
+                     filteredValue="#{managerController.filteredBooks}"
+                     emptyMessage="No books found with this criteria">
+            <f:facet name="header">
+                <h4>Available books</h4>
+            </f:facet>
+            <p:column>
+                <h:graphicImage value="data:image/jpg;base64,#{book.encryptedImage}"/>
+            </p:column>
+            <p:column headerText="Id" footerText="Id"
+                      filterBy="#{book.id}" filterMatchMode="contains"
+                      sortBy="#{book.id}"
+                      style="width: auto">
+                <h4><myTag:myOutputText myText="#{book.id}"/></h4>
+            </p:column>
+            <p:column headerText="Name" footerText="Name"
+                      filterBy="#{book.name}" filterMatchMode="contains"
+                      sortBy="#{book.name}"
+                      style="width: auto">
+                <h4><myTag:myOutputText myText="#{book.name}"/></h4>
+            </p:column>
+            <p:column headerText="Author" footerText="Author"
+                      filterBy="#{book.author}" filterMatchMode="contains"
+                      sortBy="#{book.author}">
+                <h4><myTag:myOutputText myText="#{book.author}"/></h4>
+            </p:column>
+            <p:column headerText="Year" footerText="Year"
+                      filterBy="#{book.year}" filterMatchMode="contains"
+                      sortBy="#{book.year}">
+                <h4><myTag:myOutputText myText="#{book.year}"/></h4>
+            </p:column>
+            <p:column headerText="Languge" footerText="Language"
+                      filterBy="#{book.language}" filterMatchMode="contains"
+                      sortBy="#{book.language}">
+                <h4><myTag:myOutputText myText="#{book.language}"/></h4>
+            </p:column>
+            <p:column headerText="Genre" footerText="Genre"
+                      filterBy="#{book.genre}" filterMatchMode="contains"
+                      sortBy="#{book.genre}">
+                <h4><myTag:myOutputText myText="#{book.genre}"/></h4>
+            </p:column>
+            <p:column headerText="Price" footerText="Price"
+                      filterBy="#{book.price}" filterMatchMode="contains"
+                      sortBy="#{book.price}">
+                <h4><myTag:myOutputText myText="#{book.price}"/></h4>
+            </p:column>
+            <p:column headerText="Description" footerText="Description"
+                      filterBy="#{book.description}" filterMatchMode="contains">
+                <h4><p:inputTextarea value="#{book.description}"
+                                     autoResize="false"
+                                     scrollHeight="500"
+                                     readonly="true"
+                                     style="resize: none; width:300px; height: 250px"/>
+                </h4>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+    </div>
+
+</h:body>
+</html>

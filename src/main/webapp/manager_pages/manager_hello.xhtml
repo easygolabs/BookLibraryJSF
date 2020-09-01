@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:myTag="http://myTag.com/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Free Access Library</title>
+</h:head>
+<h:body>
+    <style type="text/css">
+        body {
+            background: url("/backGround.jpg") no-repeat center center;
+            background-size: cover;
+        }
+        h2,h1{
+            text-shadow: 2px 2px 2px black,
+            0 2px 2px black,
+            -2px 0 2px black,
+            0 -2px 2px black;
+            color: cornsilk;
+        }
+        button{
+            border: snow 4px solid;
+            border-radius: 10px;
+        }
+        .msg-error{
+            background-color: #feefef;
+            border-color: #f48989;
+            color: #da1414;
+        }
+    </style>
+
+    <h4 style="color: mintcream" align="center">WELCOME,  <myTag:myOutputText myText="#{adminController.getCurrentUserName()}"/>
+        <button onclick="location.href='/user_pages/user_hello.xhtml'"><h2>User page</h2></button>
+        <button onclick="location.href='/admin_pages/admin_hello.xhtml'"><h2>Admin page</h2></button>
+        <button onclick="location.href='/logoutServlet'"><h2>Log out</h2></button>
+    </h4>
+
+    <div align="center">
+    <h:form>
+
+        <f:event type="preRenderView" listener="#{managerController.beforeLoadingPage}"/>
+
+        <p:dataTable id="dataTable" scrollable="true"
+                     scrollHeight="500"
+                     scrollWidth="1200"
+                     tableStyle="width:auto"
+                     value="#{managerController.sortedBooks}"
+                     var="book"
+                     filteredValue="#{managerController.filteredBooks}"
+                     emptyMessage="No books found with this criteria">
+            <f:facet name="header">
+                <h4>Available books</h4>
+            </f:facet>
+            <p:column>
+                <h:graphicImage value="data:image/jpg;base64,#{book.encryptedImage}"/>
+            </p:column>
+            <p:column headerText="Id" footerText="Id"
+                      filterBy="#{book.id}" filterMatchMode="contains"
+                      sortBy="#{book.id}"
+                      style="width: auto">
+                <h4><myTag:myOutputText myText="#{book.id}"/></h4>
+            </p:column>
+            <p:column headerText="Name" footerText="Name"
+                      filterBy="#{book.name}" filterMatchMode="contains"
+                      sortBy="#{book.name}"
+                      style="width: auto">
+                <h4><myTag:myOutputText myText="#{book.name}"/></h4>
+            </p:column>
+            <p:column headerText="Author" footerText="Author"
+                      filterBy="#{book.author}" filterMatchMode="contains"
+                      sortBy="#{book.author}">
+                <h4><myTag:myOutputText myText="#{book.author}"/></h4>
+            </p:column>
+            <p:column headerText="Year" footerText="Year"
+                      filterBy="#{book.year}" filterMatchMode="contains"
+                      sortBy="#{book.year}">
+                <h4><myTag:myOutputText myText="#{book.year}"/></h4>
+            </p:column>
+            <p:column headerText="Languge" footerText="Language"
+                      filterBy="#{book.language}" filterMatchMode="contains"
+                      sortBy="#{book.language}">
+                <h4><myTag:myOutputText myText="#{book.language}"/></h4>
+            </p:column>
+            <p:column headerText="Genre" footerText="Genre"
+                      filterBy="#{book.genre}" filterMatchMode="contains"
+                      sortBy="#{book.genre}">
+                <h4><myTag:myOutputText myText="#{book.genre}"/></h4>
+            </p:column>
+            <p:column headerText="Price" footerText="Price"
+                      filterBy="#{book.price}" filterMatchMode="contains"
+                      sortBy="#{book.price}">
+                <h4><myTag:myOutputText myText="#{book.price}"/></h4>
+            </p:column>
+            <p:column headerText="Description" footerText="Description"
+                      filterBy="#{book.description}" filterMatchMode="contains">
+                <h4><p:inputTextarea value="#{book.description}"
+                                     autoResize="false"
+                                     scrollHeight="500"
+                                     readonly="true"
+                                     style="resize: none; width:300px; height: 250px"/>
+                </h4>
+            </p:column>
+            <p:column headerText="Delete" footerText="Delete">
+                <h:commandButton value="Delete"
+                                 action="#{managerController.deleteBook(book.id,book.name)}"
+                                 onclick="return confirm('Are you sure? Data will be deleted.')"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <form id="addBookForm" method="post" action="${pageContext.request.contextPath}AddBookServlet" enctype="multipart/form-data">
+        <table style="background-color: white;">
+            <tr><td><h1>Adding new book</h1></td></tr>
+            <tr>
+                <th><h4>Author:</h4></th>
+                <th><h4>Year:</h4></th>
+                <th><h4>Language:</h4></th>
+                <th><h4>Genre:</h4></th>
+                <th><h4>Price:</h4></th>
+            </tr>
+            <tr>
+                <th><input maxlength="200" name="newBookAuthor" required="true"/></th>
+                <th><input type="number" min="0" maxlength="4" name="newBookYear" required="true"/></th>
+                <th><input maxlength="60" name="newBookLanguage" required="true"/></th>
+                <th><input maxlength="200" name="newBookGenre" required="true"/></th>
+                <th><input type="number" step="0.001" maxlength="10" name="newBookPrice" required="true"/></th>
+            </tr>
+            <tr><th><h4>Description:</h4></th></tr>
+            <tr><th colspan="5"><textarea style="resize: none;" rows="10" cols="100" maxlength="1000" name="newBookDescription" required="true"/></th></tr>
+            <tr><th><h4>Upload File:</h4></th></tr>
+            <tr><th><input id="fileUpload" type="file" name="fileUpload" required="required" accept="application/pdf"/></th></tr>
+            <tr><th><h4>Upload Image:</h4></th></tr>
+            <tr><th><input id="imageUpload" type="file" name="imageUpload" required="required" accept=".jpg"/></th></tr>
+            <tr><th><button>Add</button></th></tr>
+        </table>
+    </form>
+
+    <form id="editBookForm" method="post" action="${pageContext.request.contextPath}EditBookServlet" enctype="multipart/form-data">
+        <table style="background-color: white;">
+            <tr><td><h1>Editing book</h1></td></tr>
+            <tr>
+                <th><h4>Select ID:</h4></th>
+                <th><h4>Name:</h4></th>
+                <th><h4>Author:</h4></th>
+                <th><h4>Year:</h4></th>
+                <th><h4>Language:</h4></th>
+                <th><h4>Genre:</h4></th>
+                <th><h4>Price:</h4></th>
+            </tr>
+            <tr>
+                <th><input type="number" min="0" max="9999" name="id" required="true"/></th>
+                <th><input maxlength="200" name="editBookName" required="true"/></th>
+                <th><input maxlength="200" name="editBookAuthor" required="true"/></th>
+                <th><input type="number" min="0" max="99999" name="editBookYear" required="true"/></th>
+                <th><input maxlength="60" name="editBookLanguage" required="true"/></th>
+                <th><input maxlength="200" name="editBookGenre" required="true"/></th>
+                <th><input type="number" step="0.001" max="99999" name="editBookPrice" required="true"/></th>
+            </tr>
+            <tr><th><h4>Description:</h4></th></tr>
+            <tr><th colspan="5"><textarea style="resize: none;" rows="10" cols="100" maxlength="1000" name="editBookDescription" required="true"/></th></tr>
+            <tr><th><h4>Upload Image:</h4></th></tr>
+            <tr><th><input id="editImage" type="file" name="imageUpload" required="required" accept=".jpg"/></th></tr>
+            <tr><th><button onclick="return confirm('Are you sure? Old data will be replaced.')">Edit</button></th></tr>
+        </table>
+    </form>
+    </div>
+
+</h:body>
+</html>

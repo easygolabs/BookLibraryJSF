@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+    <title>Welcome</title>
+</h:head>
+<h:body>
+    <style type="text/css">
+        body {
+            background: darkgrey no-repeat center center;
+            background-size: cover;
+        }
+        h2{
+            text-shadow: 2px 2px 2px black,
+            0 2px 2px black,
+            -2px 0 2px black,
+            0 -2px 2px black;
+            color: cornsilk;
+        }
+        button{
+            border: snow 4px solid;
+            border-radius: 10px;
+        }
+    </style>
+<h2 align="center">Welcome=) Please, log in or register now, if you want to use our resource.
+<button onclick="location.href='/registration.xhtml'">Register now</button>
+<button onclick="location.href='/user_pages/user_hello.xhtml'">Log in</button>
+</h2>
+</h:body>
+</html>
